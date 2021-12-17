@@ -103,11 +103,10 @@ const Home = ({navigation}: Props) => {
             >
                 <Image
                     style={styles.image}
-                    source={{uri: 'https://i.imgur.com/9EEaSaS.png'}}
+                    source={require('../../assets/icons/1x/wallet.png')}
                 />
                 <Text style={styles.title}>Welcome to Crypto Book!</Text>
-                <Text style={styles.subtitle}>Make your first investment today</Text>
-                <CBButton title='OK'/>
+                <Text style={styles.subtitle}>Make your investment today</Text>
                 <Watchlist coinData={watchlistData}/>
                 <TopMoversList coinData={topMoversData}/>
                 <NewsList
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     image: {
-        height: 250,
+        height: 150,
         width: 150,
         marginTop: 40,
     },

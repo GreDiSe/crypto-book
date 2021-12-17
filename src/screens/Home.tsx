@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {StatusBar} from 'expo-status-bar';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
     StyleSheet,
     Text,
@@ -9,17 +9,17 @@ import {
     Image,
     LogBox,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { useScrollToTop } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import {useSelector, useDispatch} from 'react-redux';
+import {useScrollToTop} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/AppNavigator';
 
 import * as watchlistActions from '../store/actions/watchlist';
 import * as topMoversActions from '../store/actions/topmovers';
 import * as newsActions from '../store/actions/news';
-import { WatchlistState } from '../store/reducers/watchlist';
-import { TopMoversState } from '../store/reducers/topmovers';
-import { NewsState } from '../store/reducers/news';
+import {WatchlistState} from '../store/reducers/watchlist';
+import {TopMoversState} from '../store/reducers/topmovers';
+import {NewsState} from '../store/reducers/news';
 
 import CBButton from '../components/CBButton';
 import TopMoversList from '../components/TopMoversList';
@@ -33,18 +33,16 @@ interface RootState {
     news: NewsState;
 }
 
-type HomeScreenNavigationProp = StackNavigationProp<
-    RootStackParamList,
-    'HomeScreen'
-    >;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList,
+    'HomeScreen'>;
 
 type Props = {
     navigation: HomeScreenNavigationProp;
 };
 
-const Home = ({ navigation }: Props) => {
-    const watchlistData = useSelector(
-        (state: RootState) => state.watchlist.watchlistData
+const Home = ({navigation}: Props) => {
+    const {watchlistData, watchlistCoins} = useSelector(
+        (state: RootState) => state.watchlist
     );
     const topMoversData = useSelector(
         (state: RootState) => state.topMovers.topMoversData
@@ -56,7 +54,6 @@ const Home = ({ navigation }: Props) => {
     const dispatch = useDispatch();
     const loadData = useCallback(async () => {
         try {
-            dispatch(watchlistActions.fetchCoinData());
             dispatch(topMoversActions.fetchTopMoversData());
             dispatch(newsActions.fetchNewsData());
         } catch (err) {
@@ -69,6 +66,13 @@ const Home = ({ navigation }: Props) => {
         loadData();
     }, [loadData]);
 
+    useEffect(() => {
+        try {
+            dispatch(watchlistActions.fetchCoinData());
+        } catch (e) {
+            console.log(e);
+        }
+    }, [watchlistCoins])
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         loadData().then(() => {
@@ -86,7 +90,7 @@ const Home = ({ navigation }: Props) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
-                contentContainerStyle={{ alignItems: 'center' }}
+                contentContainerStyle={{alignItems: 'center'}}
                 showsVerticalScrollIndicator={false}
                 ref={ref}
                 refreshControl={
@@ -99,19 +103,19 @@ const Home = ({ navigation }: Props) => {
             >
                 <Image
                     style={styles.image}
-                    source={{ uri: 'https://i.imgur.com/9EEaSaS.png' }}
+                    source={{uri: 'https://i.imgur.com/9EEaSaS.png'}}
                 />
-                <Text style={styles.title}>Welcome to Coinbase!</Text>
+                <Text style={styles.title}>Welcome to Crypto Book!</Text>
                 <Text style={styles.subtitle}>Make your first investment today</Text>
-                <CBButton title='Buy crypto' />
-                <Watchlist coinData={watchlistData} />
-                <TopMoversList coinData={topMoversData} />
+                <CBButton title='OK'/>
+                <Watchlist coinData={watchlistData}/>
+                <TopMoversList coinData={topMoversData}/>
                 <NewsList
                     newsData={newsData}
                     isHomeScreen={true}
                     viewMoreHandler={viewMoreHandler}
                 />
-                <StatusBar style='auto' />
+                <StatusBar style='auto'/>
             </ScrollView>
         </SafeAreaView>
     );

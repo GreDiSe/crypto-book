@@ -1,11 +1,16 @@
 import React,{useState,useEffect} from 'react'
 import { View, Text, StyleSheet,Dimensions,Image,TouchableOpacity,SafeAreaView,ScrollView } from 'react-native'
 import axios from 'axios'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {useDispatch} from "react-redux";
+import {addPortfolioData} from "../store/actions/data";
+import { addWatchListCoins } from '../store/actions/watchlist';
 
 const Prices = () => {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState("All Assets")
 
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -34,11 +39,18 @@ const Prices = () => {
     setStatus(status)
   }
 
+  const AddPortfolioData = (symbol: any) => {
+    dispatch(addPortfolioData(symbol))
+  }
+
+  const AddWatchListData = (symbol: any) => {
+    dispatch(addWatchListCoins(symbol.toUpperCase()))
+  }
 
   return (
       <SafeAreaView style={styles.container}>
         <ScrollView>
-          <View style={{paddingHorizontal:20,paddingTop:50,marginBottom:90}}>
+          <View style={{paddingTop:50,marginBottom:90}}>
             <View style={{paddingTop:50}}>
               <Text style={{color:"#5d616f",fontWeight:"500",fontSize:14}}>In the past 24 hours</Text>
               <View style={{flexDirection:"row",justifyContent:"space-between",}}>
@@ -95,6 +107,8 @@ const Prices = () => {
                       <Text style={{fontSize:16,fontWeight:'300',alignSelf:'flex-end'}}>{coin.market_data.current_price.eur} €</Text>
                       <Text style={{fontSize:14,fontWeight:"300",color:"#5d616d",alignSelf:'flex-end'}}>0 {coin.symbol}</Text>
                     </View>
+                    <Icon name="plus" size={24} color='black' style={{margin: 12}} onPress={() => AddPortfolioData(coin.symbol)}/>
+                    <Icon name="eye" size={24} color='black'  onPress={() => AddWatchListData(coin.symbol)}/>
                   </View>
                 </View>
             ))}

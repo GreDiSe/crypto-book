@@ -7,31 +7,41 @@ import {
     ScrollView,
 } from "react-native";
 import axios from "axios";
+import {useSelector} from "react-redux";
 
-const mockedPortfolioListCurrencyNumber = [0, 1, 3, 8, 9, 15, 16, 19];
-const mockedPortfolioListCurrencyAmount = [1, 7, 55, 4, 5, 3, 2, 100];
 
 const Portfolio = () => {
     const [data, setData] = useState([]);
+    const [apiData, setApiData] = useState([]);
     const [totalBalance, setTotalBalance] = useState(0);
+    const portfolio = useSelector(state => state.data.portfolio)
+    const amountList = useSelector(state => state.data.amountList)
 
     useEffect(() => {
         axios
             .get(`https://api.coingecko.com/api/v3/coins/`)
             .then(function (response: any) {
-                const data = response.data.filter((el: any, index: number) => mockedPortfolioListCurrencyNumber.includes(index));
-                const dataWithCount = data.map((el: any, index: number) => ({
-                    ...el,
-                    count: mockedPortfolioListCurrencyAmount[index]
-                }));
-                const totalBalance = dataWithCount.reduce((prevValue: number, coin: any) => prevValue + (coin.market_data.current_price.usd * coin.count), 0);
-                setTotalBalance(totalBalance);
-                setData(dataWithCount);
+                setApiData(response.data)
             })
             .catch(function (error: any) {
                 console.log(error);
             });
     }, []);
+
+    useEffect(() => {
+        function update() {
+            const data = apiData.filter((el: any) => portfolio.includes(el.symbol));
+            const dataWithCount = data.map((el: any) => ({
+                ...el,
+                count: amountList[portfolio.findIndex((symbol: any) => symbol === el.symbol)]
+            }));
+            const totalBalance = dataWithCount.reduce((prevValue: number, coin: any) => prevValue + (coin.market_data.current_price.usd * coin.count), 0);
+            setTotalBalance(totalBalance);
+            setData(dataWithCount as any);
+        }
+
+        update();
+    }, [portfolio, amountList, apiData]);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>

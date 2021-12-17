@@ -6,12 +6,14 @@ import ReduxThunk from 'redux-thunk';
 import watchlistReducer from './src/store/reducers/watchlist';
 import topMoversReducer from './src/store/reducers/topmovers';
 import newsReducer from './src/store/reducers/news';
+import newsData from './src/store/reducers/data';
 import AppNavigator from './src/navigation/AppNavigator';
 
 const rootReducer = combineReducers({
   watchlist: watchlistReducer,
   topMovers: topMoversReducer,
   news: newsReducer,
+  data: newsData
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

@@ -14,7 +14,7 @@ const TopMovers: FC<TopMoversProps> = ({ coinData }) => {
       <Text style={styles.topMoversText}>Top movers</Text>
       <FlatList
         data={coinData}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.symbol}
         horizontal
         showsHorizontalScrollIndicator={false}
         snapToOffsets={[...Array(coinData.length)].map((x, i) => 158 * i + 162)}

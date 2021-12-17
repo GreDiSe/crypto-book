@@ -9,10 +9,19 @@ import NewsScreen, { screenOptions as NewsOptions } from '../screens/News';
 import PortfolioScreen from '../screens/Portfolio';
 import PricesScreen from '../screens/Prices';
 import SettingsScreen from '../screens/Settings';
+import { StartScreen, Dashboard, LoginScreen, RegisterScreen, ResetPasswordScreen} from "../screens/auth";
 
 export type RootStackParamList = {
   HomeScreen: undefined;
   News: undefined;
+  Auth: undefined;
+  AuthStack: undefined;
+  TabStack: undefined;
+    Dashboard: undefined;
+    RegisterScreen: undefined;
+    LoginScreen: undefined;
+    StartScreen: undefined;
+    ResetPasswordScreen: undefined;
 };
 
 const HomeStackNavigator = createNativeStackNavigator<RootStackParamList>();
@@ -43,10 +52,45 @@ const TabNavigator = () => {
   );
 };
 
+const AuthStackNavigator = createNativeStackNavigator<RootStackParamList>();
+
+const AuthNavigator = () => {
+    return (
+        <AuthStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+            <AuthStackNavigator.Screen name="StartScreen" component={StartScreen} />
+            <AuthStackNavigator.Screen name="LoginScreen" component={LoginScreen} />
+            <AuthStackNavigator.Screen name="RegisterScreen" component={RegisterScreen} />
+            <AuthStackNavigator.Screen name="Dashboard" component={Dashboard} />
+            <AuthStackNavigator.Screen
+                name="ResetPasswordScreen"
+                component={ResetPasswordScreen}
+            />
+        </AuthStackNavigator.Navigator>
+    );
+};
+
+const MainStackNavigator = createNativeStackNavigator<RootStackParamList>();
+
+const MainNavigator = () => {
+    return (
+        <MainStackNavigator.Navigator screenOptions={{ headerShown: false }}>
+            <MainStackNavigator.Screen
+                name="AuthStack"
+                component={AuthNavigator}
+            />
+            <MainStackNavigator.Screen
+                name="TabStack"
+                component={TabNavigator}
+            />
+        </MainStackNavigator.Navigator>
+    );
+};
+
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <MainNavigator />
     </NavigationContainer>
   );
 };
